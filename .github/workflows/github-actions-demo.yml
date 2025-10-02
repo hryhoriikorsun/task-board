@@ -1,0 +1,24 @@
+name: GitHub Actions Demo
+on:
+  push:
+    beanches: [main]
+  pull_request:
+    beanches: [main]
+jobs:
+  Explore-GitHub-Actions:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node_version: [20.x]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Starting Node.js ${{ matrix.node_version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node_version }}
+      - name: Install modules
+        run: npm ci
+      - name: Build project
+        run: npm run build
+      - name: Lint code
+        run: npm run lint
