@@ -1,4 +1,4 @@
-name: GitHub Actions Demo
+name: Deploy GitHub Actions
 on:
   push:
     beanches: [main]
@@ -22,3 +22,8 @@ jobs:
         run: npm run build
       - name: Lint code
         run: npm run lint
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
