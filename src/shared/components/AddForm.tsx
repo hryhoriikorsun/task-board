@@ -1,21 +1,46 @@
+import { useState } from 'react';
+import { tasksAPI } from '../api/tasksAPI';
+import { reload } from '../utils/reloandPage';
+
 export const AddForm = () => {
+  const [title, setTitle] = useState('');
+  const [description, setDescription] = useState('');
+
+  const addSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
+    const newTask = {
+      title,
+      status: false,
+      description,
+    };
+
+    await tasksAPI.create(newTask);
+
+    reload();
+  };
+
   return (
-    <div className='p-2 border-2 rounded-md'>
+    <div className='p-2 border-2 rounded-md w-full'>
       <h2 className='font-semibold mb-3'>Add task</h2>
       <form
         className='flex flex-col gap-y-2'
-        action=''
+        onSubmit={addSubmit}
       >
         <input
           className='bg-gray-100 border-2 rounded-md pl-2 placeholder-gray-700'
           type='text'
           name='title'
           placeholder='Title'
+          value={title}
+          onChange={(event) => setTitle(event.target.value)}
         />
         <textarea
           className='h-20 bg-gray-100 border-2 rounded-md pl-2 resize-none placeholder-gray-700'
           name='description'
           placeholder='Description'
+          value={description}
+          onChange={(event) => setDescription(event.target.value)}
         ></textarea>
         <button
           className='text-white bg-indigo-400 rounded-md p-1'

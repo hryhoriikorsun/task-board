@@ -1,24 +1,30 @@
-import { StatusTask } from '../types/statusTask';
+import { tasksAPI } from '../api/tasksAPI';
+import type { Task } from '../types/Task';
+import { reload } from '../utils/reloandPage';
 
 interface ListItemProps {
-  title: string;
-  status: StatusTask;
-  description: string;
+  task: Task;
+  onClickEdit: (task: Task) => void;
 }
 
-export const ListItem = ({ title, status, description }: ListItemProps) => {
+export const ListItem = ({ task, onClickEdit }: ListItemProps) => {
+  const handleDeleteTask = async () => {
+    await tasksAPI.remove(task.id);
+    reload();
+  };
+
   return (
     <li className='flex items-center justify-between p-2 gap-x-8 border-b-2 last:border-b-0'>
       <div>
-        <h2 className='font-semibold'>{title}</h2>
-        <p>{description}</p>
+        <h2 className='font-semibold'>{task.title}</h2>
+        <p>{task.description}</p>
       </div>
-      {status === StatusTask.Completed ? (
+      {task.status ? (
         <p className='p-1 rounded-md bg-green-100 font-semibold'>Completed</p>
       ) : (
         <div className='flex gap-x-2 font-semibold'>
-          <button>Edit</button>
-          <button>Delete</button>
+          <button onClick={() => onClickEdit(task)}>Edit</button>
+          <button onClick={handleDeleteTask}>Delete</button>
         </div>
       )}
     </li>

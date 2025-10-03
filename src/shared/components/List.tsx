@@ -1,17 +1,19 @@
+import type { Task } from '../types/Task';
 import { ListItem } from './ListItem';
-import { StatusTask } from '../types/statusTask';
 
-import tasks from '../../assets/tasksData.json';
+interface ListProps {
+  tasks: Task[];
+  onClickEdit: (task: Task) => void;
+}
 
-export const List = () => {
+export const List = ({ tasks, onClickEdit }: ListProps) => {
   return (
     <ul className='h-60 border-2 rounded-md overflow-y-scroll'>
       {tasks.map((task) => (
         <ListItem
           key={task.id}
-          title={task.title}
-          status={task.status as StatusTask}
-          description={task.description}
+          task={task}
+          onClickEdit={onClickEdit}
         />
       ))}
     </ul>
