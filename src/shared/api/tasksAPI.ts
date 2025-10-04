@@ -8,9 +8,8 @@ const getAll = async (): Promise<Task[]> => {
       headers: { 'content-type': 'application/json' },
     },
   );
-  const data = await res.json();
 
-  return data;
+  return res.json();
 };
 
 const getById = async (taskId: Task['id']): Promise<Task> => {
@@ -21,9 +20,8 @@ const getById = async (taskId: Task['id']): Promise<Task> => {
       headers: { 'content-type': 'application/json' },
     },
   );
-  const data = await res.json();
 
-  return data;
+  return res.json();
 };
 
 const create = async ({
@@ -39,9 +37,8 @@ const create = async ({
       body: JSON.stringify({ title, status, description }),
     },
   );
-  const data = await res.json();
 
-  return data;
+  return res.json();
 };
 
 const remove = async (tasksId: Task['id']) => {
@@ -51,9 +48,8 @@ const remove = async (tasksId: Task['id']) => {
       method: 'DELETE',
     },
   );
-  const data = await res.json();
 
-  return data;
+  return res.json();
 };
 
 const update = async (
@@ -68,9 +64,8 @@ const update = async (
       body: JSON.stringify({ title, status, description }),
     },
   );
-  const data = await res.json();
 
-  return data;
+  return res.json();
 };
 
 export const tasksAPI = {

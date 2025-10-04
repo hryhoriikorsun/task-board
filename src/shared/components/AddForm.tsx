@@ -1,12 +1,16 @@
 import { useState } from 'react';
+import { useDispatch } from 'react-redux';
+import type { AppDispatch } from '../rtk/store';
+import { addTask } from '../rtk/tasksSlice';
 import { tasksAPI } from '../api/tasksAPI';
-import { reload } from '../utils/reloandPage';
 
 export const AddForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
+
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
-  const addSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     const newTask = {
@@ -17,7 +21,10 @@ export const AddForm = () => {
 
     await tasksAPI.create(newTask);
 
-    reload();
+    dispatch(addTask(newTask));
+
+    setTitle('');
+    setDescription('');
   };
 
   return (
@@ -25,7 +32,7 @@ export const AddForm = () => {
       <h2 className='font-semibold mb-3'>Add task</h2>
       <form
         className='flex flex-col gap-y-2'
-        onSubmit={addSubmit}
+        onSubmit={handleAdd}
       >
         <input
           className='bg-gray-100 border-2 rounded-md pl-2 placeholder-gray-700'

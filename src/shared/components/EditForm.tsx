@@ -1,14 +1,13 @@
 import { useState } from 'react';
-import type { Task } from '../types/Task';
 import { tasksAPI } from '../api/tasksAPI';
-import { reload } from '../utils/reloandPage';
+import { useDispatch, useSelector } from 'react-redux';
+import type { AppDispatch, RootState } from '../rtk/store';
+import { setEditItem, updateTask } from '../rtk/tasksSlice';
 
-interface EditFormProps {
-  oneTask: Task;
-  onClickEdit: (task: Task) => void;
-}
+export const EditForm = () => {
+  const dispatch = useDispatch<AppDispatch>();
+  const { editItem } = useSelector((state: RootState) => state.tasks);
 
-export const EditForm = ({ oneTask, onClickEdit }: EditFormProps) => {
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
 
@@ -16,23 +15,31 @@ export const EditForm = ({ oneTask, onClickEdit }: EditFormProps) => {
     event.preventDefault();
 
     const newTask = {
-      title: !newTitle ? oneTask.title : newTitle,
-      status: oneTask.status,
-      description: !newDescription ? oneTask.description : newDescription,
+      id: editItem.id,
+      title: !newTitle ? editItem.title : newTitle,
+      status: editItem.status,
+      description: !newDescription ? editItem.description : newDescription,
     };
 
-    await tasksAPI.update(oneTask.id, newTask);
+    await tasksAPI.update(editItem.id, newTask);
 
-    reload();
+    setNewTitle('');
+    setNewDescription('');
+
+    dispatch(updateTask(newTask));
   };
 
   const handleClearEditForm = () => {
-    onClickEdit({
-      id: '',
-      title: '',
-      status: false,
-      description: '',
-    });
+    dispatch(
+      setEditItem({
+        id: '',
+        title: '',
+        status: false,
+        description: '',
+      }),
+    );
+    setNewTitle('');
+    setNewDescription('');
   };
 
   return (
@@ -48,7 +55,7 @@ export const EditForm = ({ oneTask, onClickEdit }: EditFormProps) => {
           type='text'
           name='title'
           id='title'
-          placeholder={oneTask.id !== '' ? oneTask.title : 'Title'}
+          placeholder={editItem.id !== '' ? editItem.title : 'Title'}
           value={newTitle}
           onChange={(event) => setNewTitle(event.target.value)}
         />
@@ -57,7 +64,9 @@ export const EditForm = ({ oneTask, onClickEdit }: EditFormProps) => {
           className='h-20 bg-gray-100 border-2 rounded-md pl-2 resize-none placeholder-gray-700'
           name='description'
           id='description'
-          placeholder={oneTask.id !== '' ? oneTask.description : 'Description'}
+          placeholder={
+            editItem.id !== '' ? editItem.description : 'Description'
+          }
           value={newDescription}
           onChange={(event) => setNewDescription(event.target.value)}
         ></textarea>
