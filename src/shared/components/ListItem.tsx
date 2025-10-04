@@ -14,7 +14,7 @@ export const ListItem = ({ task, onClickEdit }: ListItemProps) => {
   };
 
   return (
-    <li className='flex items-center justify-between p-2 gap-x-8 border-b-2 last:border-b-0'>
+    <li className='flex items-center justify-between gap-x-4 p-2 border-b-2 last:border-b-0'>
       <div>
         <h2 className='font-semibold'>{task.title}</h2>
         <p>{task.description}</p>
@@ -22,7 +22,7 @@ export const ListItem = ({ task, onClickEdit }: ListItemProps) => {
       {task.status ? (
         <p className='p-1 rounded-md bg-green-100 font-semibold'>Completed</p>
       ) : (
-        <div className='flex gap-x-2 font-semibold'>
+        <div className='flex flex-col sm:flex-row gap-2 font-semibold'>
           <button onClick={() => onClickEdit(task)}>Edit</button>
           <button onClick={handleDeleteTask}>Delete</button>
         </div>
