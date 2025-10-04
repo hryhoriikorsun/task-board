@@ -17,8 +17,6 @@ function App() {
     description: '',
   });
 
-  console.log(oneTask);
-
   useEffect(() => {
     // setIsLoading(true);
 
@@ -28,8 +26,8 @@ function App() {
   }, []);
 
   return (
-    <section className='flex flex-col gap-y-2 p-6 bg-white rounded-md drop-shadow-md'>
-      <h1 className='font-semibold '>Tasks</h1>
+    <section className='grid grid-cols-12 gap-3 p-6 max-w-[600px] text-sm sm:text-base bg-white rounded-md drop-shadow-md'>
+      <h1 className='col-span-12 font-semibold'>Tasks</h1>
       <BtnsBar />
 
       <List
@@ -37,7 +35,7 @@ function App() {
         onClickEdit={setOneTask}
       />
 
-      <div className='flex gap-x-2 place-items-baseline'>
+      <div className='col-span-12 flex flex-col sm:flex-row gap-x-3 place-items-baseline'>
         <AddForm />
         <EditForm
           oneTask={oneTask}
