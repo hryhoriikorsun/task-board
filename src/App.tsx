@@ -6,15 +6,20 @@ import { List } from './shared/components/List';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from './shared/rtk/store';
 import { fetchTasks } from './shared/rtk/tasksSlice';
+import { visibleTasks } from './shared/utils/visibleTasks';
 import { Toaster } from 'sonner';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();
-  const { items, isLoading } = useSelector((state: RootState) => state.tasks);
+  const { items, isLoading, filter } = useSelector(
+    (state: RootState) => state.tasks,
+  );
 
   useEffect(() => {
     dispatch(fetchTasks());
   }, [dispatch]);
+
+  const tasks = visibleTasks(items, filter);
 
   return (
     <section className='grid grid-cols-12 gap-3 p-6 max-w-[600px] text-sm sm:text-base bg-white rounded-md drop-shadow-md'>
@@ -27,7 +32,7 @@ function App() {
       <h1 className='col-span-12 font-semibold'>Tasks</h1>
       <BtnsBar />
 
-      {isLoading ? <>Loading...</> : <List tasks={items} />}
+      {isLoading ? <>Loading...</> : <List tasks={tasks} />}
 
       <div className='col-span-12 flex flex-col sm:flex-row gap-x-3 place-items-baseline'>
         <AddForm />
