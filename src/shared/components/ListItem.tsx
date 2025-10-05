@@ -4,6 +4,7 @@ import type { Task } from '../types/Task';
 import type { AppDispatch, RootState } from '../rtk/store';
 import { removeTask, setEditItem } from '../rtk/tasksSlice';
 import cn from 'classnames';
+import { toast } from 'sonner';
 
 interface ListItemProps {
   task: Task;
@@ -15,6 +16,8 @@ export const ListItem = ({ task }: ListItemProps) => {
 
   const handleDeleteTask = async () => {
     await tasksAPI.remove(task.id);
+
+    toast.success(`Task '${task.title}' deleted.`);
 
     dispatch(removeTask(task.id));
   };
