@@ -5,22 +5,27 @@ import {
 } from '@reduxjs/toolkit';
 import type { Task } from '../types/Task';
 import { tasksAPI } from '../api/tasksAPI';
+import { STATUS, type ChoosedStatus } from '../types/status';
 
 interface TasksState {
   items: Task[];
+  visibleItems: Task[];
   editItem: Task;
+  filter: ChoosedStatus;
   isLoading: boolean;
   error: string | null;
 }
 
 const initialState: TasksState = {
   items: [],
+  visibleItems: [],
   editItem: {
     id: '',
     title: '',
     status: false,
     description: '',
   },
+  filter: STATUS.ALL,
   isLoading: false,
   error: null,
 };
@@ -42,7 +47,6 @@ export const tasksSlice = createSlice({
         ...action.payload,
         id: `${+taskWithMaxId.id + 1}`,
       };
-      console.log(newTask);
 
       state.items.push(newTask);
     },
@@ -64,6 +68,9 @@ export const tasksSlice = createSlice({
       console.log(action.payload);
       state.editItem = action.payload;
     },
+    setFilte(state, action: PayloadAction<ChoosedStatus>) {
+      state.filter = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -82,6 +89,6 @@ export const tasksSlice = createSlice({
   },
 });
 
-export const { addTask, updateTask, removeTask, setEditItem } =
+export const { addTask, updateTask, removeTask, setEditItem, setFilte } =
   tasksSlice.actions;
 export default tasksSlice.reducer;
