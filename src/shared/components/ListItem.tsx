@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { tasksAPI } from '../api/tasksAPI';
 import type { Task } from '../types/Task';
 import type { AppDispatch, RootState } from '../rtk/store';
-import { removeTask, setEditItem } from '../rtk/tasksSlice';
+import { removeTask, setEditItem, updateTask } from '../rtk/tasksSlice';
 import cn from 'classnames';
 import { toast } from 'sonner';
 
@@ -22,6 +22,19 @@ export const ListItem = ({ task }: ListItemProps) => {
     dispatch(removeTask(task.id));
   };
 
+  const handleChengeStatusTask = async () => {
+    const newTask = {
+      id: task.id,
+      title: task.title,
+      status: !task.status,
+      description: task.description,
+    };
+
+    await tasksAPI.update(task.id, newTask);
+
+    dispatch(updateTask(newTask));
+  };
+
   return (
     <li
       className={cn(
@@ -29,9 +42,16 @@ export const ListItem = ({ task }: ListItemProps) => {
         { 'bg-orange-300 border-b-orange-500': task.id === editItem.id },
       )}
     >
-      <div>
-        <h2 className='font-semibold'>{task.title}</h2>
-        <p>{task.description}</p>
+      <div className='flex gap-x-4'>
+        <input
+          type='checkbox'
+          onChange={handleChengeStatusTask}
+          checked={task.status}
+        />
+        <div>
+          <h2 className='font-semibold'>{task.title}</h2>
+          <p>{task.description}</p>
+        </div>
       </div>
       {task.status ? (
         <p className='p-1 rounded-md bg-green-100 font-semibold'>Completed</p>
