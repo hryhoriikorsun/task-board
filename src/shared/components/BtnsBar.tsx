@@ -1,5 +1,5 @@
 import { useDispatch } from 'react-redux';
-import { STATUS } from '../types/status';
+import { STATUS } from '../types/Status';
 import type { AppDispatch } from '../rtk/store';
 import { setFilte } from '../rtk/tasksSlice';
 

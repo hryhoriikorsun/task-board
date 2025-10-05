@@ -6,8 +6,8 @@ import { List } from './shared/components/List';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from './shared/rtk/store';
 import { fetchTasks } from './shared/rtk/tasksSlice';
-import { Toaster } from 'sonner';
 import { visibleTasks } from './shared/utils/visibleTasks';
+import { Toaster } from 'sonner';
 
 function App() {
   const dispatch = useDispatch<AppDispatch>();

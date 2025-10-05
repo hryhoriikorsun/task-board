@@ -5,7 +5,7 @@ import {
 } from '@reduxjs/toolkit';
 import type { Task } from '../types/Task';
 import { tasksAPI } from '../api/tasksAPI';
-import { STATUS, type ChoosedStatus } from '../types/status';
+import { STATUS, type ChoosedStatus } from '../types/Status';
 
 interface TasksState {
   items: Task[];

@@ -1,4 +1,4 @@
-import { STATUS, type ChoosedStatus } from '../types/status';
+import { STATUS, type ChoosedStatus } from '../types/Status';
 import type { Task } from '../types/Task';
 
 export const visibleTasks = (tasks: Task[], filter: ChoosedStatus) => {
