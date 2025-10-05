@@ -3,6 +3,8 @@ import { tasksAPI } from '../api/tasksAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import type { AppDispatch, RootState } from '../rtk/store';
 import { setEditItem, updateTask } from '../rtk/tasksSlice';
+import { taskSchema } from '../schemas/task.shema';
+import { toast } from 'sonner';
 
 export const EditForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -14,14 +16,29 @@ export const EditForm = () => {
   const editSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const result = taskSchema.safeParse({
+      title: newTitle,
+      description: newDescription,
+    });
+
+    if (!result.success) {
+      const msgs = result.error.issues.map((problem) => problem.message + '.');
+      toast.error(msgs[0]);
+      return;
+    }
+
+    const validData = result.data;
+
     const newTask = {
       id: editItem.id,
-      title: !newTitle ? editItem.title : newTitle,
+      title: validData.title,
       status: editItem.status,
-      description: !newDescription ? editItem.description : newDescription,
+      description: validData.description,
     };
 
     await tasksAPI.update(editItem.id, newTask);
+
+    toast.success(`Task '${validData.title}' updated.`);
 
     setNewTitle('');
     setNewDescription('');
@@ -58,6 +75,7 @@ export const EditForm = () => {
           placeholder={editItem.id !== '' ? editItem.title : 'Title'}
           value={newTitle}
           onChange={(event) => setNewTitle(event.target.value)}
+          disabled={!editItem.id}
         />
         <label htmlFor='description'>Description</label>
         <textarea
@@ -69,11 +87,13 @@ export const EditForm = () => {
           }
           value={newDescription}
           onChange={(event) => setNewDescription(event.target.value)}
+          disabled={!editItem.id}
         ></textarea>
         <div className='flex gap-x-2'>
           <button
             className='w-full text-white bg-emerald-500 rounded-md p-1'
             type='submit'
+            disabled={!editItem.id}
           >
             Save
           </button>
@@ -81,6 +101,7 @@ export const EditForm = () => {
             className='w-full border-2 rounded-md p-1'
             type='reset'
             onClick={handleClearEditForm}
+            disabled={!editItem.id}
           >
             Cancel
           </button>

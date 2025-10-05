@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import type { AppDispatch } from '../rtk/store';
 import { addTask } from '../rtk/tasksSlice';
 import { tasksAPI } from '../api/tasksAPI';
+import { toast } from 'sonner';
+import { taskSchema } from '../schemas/task.shema';
 
 export const AddForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -13,15 +15,27 @@ export const AddForm = () => {
   const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
+    const result = taskSchema.safeParse({ title, description });
+
+    if (!result.success) {
+      const msgs = result.error.issues.map((problem) => problem.message + '.');
+      toast.error(msgs[0]);
+      return;
+    }
+
+    const validData = result.data;
+
     const newTask = {
-      title,
+      title: validData.title,
       status: false,
-      description,
+      description: validData.description,
     };
 
     await tasksAPI.create(newTask);
 
     dispatch(addTask(newTask));
+
+    toast.success(`Task '${validData.title}' created.`);
 
     setTitle('');
     setDescription('');
@@ -52,6 +66,7 @@ export const AddForm = () => {
         <button
           className='text-white bg-indigo-400 rounded-md p-1'
           type='submit'
+          disabled={!title || !description}
         >
           Add
         </button>
