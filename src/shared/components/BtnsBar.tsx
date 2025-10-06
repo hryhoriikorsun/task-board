@@ -1,10 +1,9 @@
-import { useDispatch } from 'react-redux';
+import { useBtnsBar } from '../hooks/useBtnsRar';
 import { STATUS } from '../types/Status';
-import type { AppDispatch } from '../rtk/store';
-import { setFilte } from '../rtk/tasksSlice';
+import cn from 'classnames';
 
 export const BtnsBar = () => {
-  const dispatch = useDispatch<AppDispatch>();
+  const { filter, hanbleStatus } = useBtnsBar();
 
   return (
     <div className='col-span-12 flex gap-x-4'>
@@ -12,7 +11,10 @@ export const BtnsBar = () => {
         return (
           <button
             key={key}
-            onClick={() => dispatch(setFilte(value))}
+            className={cn({
+              'opacity-40': filter === value,
+            })}
+            onClick={() => hanbleStatus(value)}
           >
             {key}
           </button>
