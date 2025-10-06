@@ -5,6 +5,7 @@ import type { AppDispatch, RootState } from '../rtk/store';
 import { setEditItem, updateTask } from '../rtk/tasksSlice';
 import { taskSchema } from '../schemas/task.shema';
 import { toast } from 'sonner';
+import cn from 'classnames';
 
 export const EditForm = () => {
   const dispatch = useDispatch<AppDispatch>();
@@ -12,9 +13,12 @@ export const EditForm = () => {
 
   const [newTitle, setNewTitle] = useState('');
   const [newDescription, setNewDescription] = useState('');
+  const [isEditingTask, setIsEditingTask] = useState(false);
 
   const editSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setIsEditingTask(true);
 
     const result = taskSchema.safeParse({
       title: newTitle,
@@ -44,6 +48,8 @@ export const EditForm = () => {
     setNewDescription('');
 
     dispatch(updateTask(newTask));
+
+    setIsEditingTask(false);
   };
 
   const handleClearEditForm = () => {
@@ -91,17 +97,21 @@ export const EditForm = () => {
         ></textarea>
         <div className='flex gap-x-2'>
           <button
-            className='w-full text-white bg-emerald-500 rounded-md p-1'
+            className={cn('w-full text-white bg-emerald-500 rounded-md p-1', {
+              'opacity-40': isEditingTask,
+            })}
             type='submit'
-            disabled={!editItem.id}
+            disabled={!editItem.id || isEditingTask}
           >
             Save
           </button>
           <button
-            className='w-full border-2 rounded-md p-1'
+            className={cn('w-full border-2 rounded-md p-1', {
+              'opacity-40': isEditingTask,
+            })}
             type='reset'
             onClick={handleClearEditForm}
-            disabled={!editItem.id}
+            disabled={!editItem.id || isEditingTask}
           >
             Cancel
           </button>

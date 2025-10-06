@@ -5,15 +5,19 @@ import { addTask } from '../rtk/tasksSlice';
 import { tasksAPI } from '../api/tasksAPI';
 import { toast } from 'sonner';
 import { taskSchema } from '../schemas/task.shema';
+import cn from 'classnames';
 
 export const AddForm = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [isAddingTask, setIsAddingTask] = useState(false);
 
   const handleAdd = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    setIsAddingTask(true);
 
     const result = taskSchema.safeParse({ title, description });
 
@@ -39,6 +43,7 @@ export const AddForm = () => {
 
     setTitle('');
     setDescription('');
+    setIsAddingTask(false);
   };
 
   return (
@@ -64,9 +69,11 @@ export const AddForm = () => {
           onChange={(event) => setDescription(event.target.value)}
         ></textarea>
         <button
-          className='text-white bg-indigo-400 rounded-md p-1'
+          className={cn('text-white bg-indigo-400 rounded-md p-1', {
+            'opacity-40': isAddingTask,
+          })}
           type='submit'
-          disabled={!title || !description}
+          disabled={!title || !description || isAddingTask}
         >
           Add
         </button>
