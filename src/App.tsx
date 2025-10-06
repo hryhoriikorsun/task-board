@@ -1,25 +1,12 @@
-import { useEffect } from 'react';
 import { AddForm } from './shared/components/AddForm';
 import { BtnsBar } from './shared/components/BtnsBar';
 import { EditForm } from './shared/components/EditForm';
 import { List } from './shared/components/List';
-import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from './shared/rtk/store';
-import { fetchTasks } from './shared/rtk/tasksSlice';
-import { visibleTasks } from './shared/utils/visibleTasks';
+import { useApp } from './shared/hooks/useApp';
 import { Toaster } from 'sonner';
 
 function App() {
-  const dispatch = useDispatch<AppDispatch>();
-  const { items, isLoading, filter } = useSelector(
-    (state: RootState) => state.tasks,
-  );
-
-  useEffect(() => {
-    dispatch(fetchTasks());
-  }, [dispatch]);
-
-  const tasks = visibleTasks(items, filter);
+  const { isLoading, tasks } = useApp();
 
   return (
     <section className='grid grid-cols-12 gap-3 p-6 max-w-[600px] text-sm sm:text-base bg-white rounded-md drop-shadow-md'>

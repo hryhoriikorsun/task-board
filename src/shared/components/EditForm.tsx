@@ -1,69 +1,17 @@
-import { useState } from 'react';
-import { tasksAPI } from '../api/tasksAPI';
-import { useDispatch, useSelector } from 'react-redux';
-import type { AppDispatch, RootState } from '../rtk/store';
-import { setEditItem, updateTask } from '../rtk/tasksSlice';
-import { taskSchema } from '../schemas/task.shema';
-import { toast } from 'sonner';
 import cn from 'classnames';
+import { useEditForm } from '../hooks/useEditForm';
 
 export const EditForm = () => {
-  const dispatch = useDispatch<AppDispatch>();
-  const { editItem } = useSelector((state: RootState) => state.tasks);
-
-  const [newTitle, setNewTitle] = useState('');
-  const [newDescription, setNewDescription] = useState('');
-  const [isEditingTask, setIsEditingTask] = useState(false);
-
-  const editSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-
-    setIsEditingTask(true);
-
-    const result = taskSchema.safeParse({
-      title: newTitle,
-      description: newDescription,
-    });
-
-    if (!result.success) {
-      const msgs = result.error.issues.map((problem) => problem.message + '.');
-      toast.error(msgs[0]);
-      return;
-    }
-
-    const validData = result.data;
-
-    const newTask = {
-      id: editItem.id,
-      title: validData.title,
-      status: editItem.status,
-      description: validData.description,
-    };
-
-    await tasksAPI.update(editItem.id, newTask);
-
-    toast.success(`Task '${validData.title}' updated.`);
-
-    setNewTitle('');
-    setNewDescription('');
-
-    dispatch(updateTask(newTask));
-
-    setIsEditingTask(false);
-  };
-
-  const handleClearEditForm = () => {
-    dispatch(
-      setEditItem({
-        id: '',
-        title: '',
-        status: false,
-        description: '',
-      }),
-    );
-    setNewTitle('');
-    setNewDescription('');
-  };
+  const {
+    editItem,
+    newTitle,
+    newDescription,
+    isEditingTask,
+    editSubmit,
+    handleClearEditForm,
+    handleNewTitle,
+    handleNewDescription,
+  } = useEditForm();
 
   return (
     <div className='p-2 border-2 rounded-md w-full'>
@@ -80,7 +28,7 @@ export const EditForm = () => {
           id='title'
           placeholder={editItem.id !== '' ? editItem.title : 'Title'}
           value={newTitle}
-          onChange={(event) => setNewTitle(event.target.value)}
+          onChange={handleNewTitle}
           disabled={!editItem.id}
         />
         <label htmlFor='description'>Description</label>
@@ -92,7 +40,7 @@ export const EditForm = () => {
             editItem.id !== '' ? editItem.description : 'Description'
           }
           value={newDescription}
-          onChange={(event) => setNewDescription(event.target.value)}
+          onChange={handleNewDescription}
           disabled={!editItem.id}
         ></textarea>
         <div className='flex gap-x-2'>
