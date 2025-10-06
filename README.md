@@ -34,7 +34,7 @@ This app allows users to create, edit, delete, and filter tasks by their complet
 1. Clone the repository:
 
    ```bash
-   git clone https://github.com/yourusername/task-board.git
+   git clone https://github.com/hryhoriikorsun/task-board.git
    cd task-board
    ```
 
