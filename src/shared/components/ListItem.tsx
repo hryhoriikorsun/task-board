@@ -1,6 +1,7 @@
 import { useListItem } from '../hooks/useListItem';
 import type { Task } from '../types/Task';
 import cn from 'classnames';
+import { ListItemBtn } from './ListItemBtn';
 
 interface ListItemProps {
   task: Task;
@@ -39,21 +40,27 @@ export const ListItem = ({ task }: ListItemProps) => {
         </div>
       </div>
       {task.status ? (
-        <p className='p-1 rounded-md bg-green-100 font-semibold'>Completed</p>
+        <ListItemBtn
+          value={'Delete'}
+          isDeletingTask={isDeletingTask}
+          isStatusChanging={isStatusChanging}
+          handleActionTask={handleDeleteTask}
+        />
       ) : (
-        <div className='flex flex-col sm:flex-row gap-2 font-semibold'>
-          <button
-            onClick={handleEditItem}
-            disabled={isStatusChanging || isDeletingTask}
-          >
-            Edit
-          </button>
-          <button
-            onClick={handleDeleteTask}
-            disabled={isStatusChanging || isDeletingTask}
-          >
-            Delete
-          </button>
+        <div className='flex flex-col sm:flex-row gap-2'>
+          <ListItemBtn
+            value={'Edit'}
+            isDeletingTask={isDeletingTask}
+            isStatusChanging={isStatusChanging}
+            handleActionTask={handleEditItem}
+          />
+
+          <ListItemBtn
+            value={'Delete'}
+            isDeletingTask={isDeletingTask}
+            isStatusChanging={isStatusChanging}
+            handleActionTask={handleDeleteTask}
+          />
         </div>
       )}
     </li>
